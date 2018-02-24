@@ -41,11 +41,7 @@ integratebutton, differentiatebutton, graphpopup, plotreturn, clearpopup, conten
 yesbutton, nobutton = (ObjectProperty(None),) * 35 
 
 
-
-
 def render(expr:str, path:str, err:bool) -> None:
-    
-    
     rcParams['text.usetex'] = True if 'begin' in expr or err is True else False
     rcParams['text.latex.unicode'] = True if 'begin' in expr or err is True else False
     rcParams['text.latex.preamble'] = r'\usepackage{amsmath}' \
@@ -78,7 +74,6 @@ def render(expr:str, path:str, err:bool) -> None:
         raise Exception('oversized')
 
     clear()
-
 
 
 def plot() -> str:
@@ -125,7 +120,6 @@ def plot() -> str:
         ax.set_axis_off() 
         plt.title(r'Expression Unplottable' if language == 'eng' else 'Ausdruck nicht plottbar', fontsize=40, y=1.025)
         
-
     else:
         plt.xlim(-(axesscope), axesscope) 
         plt.ylim(-(axesscope), axesscope) 
@@ -138,8 +132,6 @@ def plot() -> str:
         plt.savefig(path) 
         plt.clf() 
         return path 
-
-
 
 def parse(i:str) -> str: 
     psyn = {'arctan': 'atan', 'arccot': 'acot', 'arcsin': 'asin',
@@ -162,14 +154,10 @@ def parse(i:str) -> str:
 
     return parsed 
 
-
-
 def generatepath() -> str:
     randpath = ''.join(random.sample(ascii_letters * 6, 6)) + '.png' 
                                                               
     return randpath 
-
-
 
 def integration(expr:str, comp:object, ul:str, ll:str) -> tuple: 
     if 'nan' in str(comp): 
@@ -193,14 +181,10 @@ def integration(expr:str, comp:object, ul:str, ll:str) -> tuple:
         expr = r"\int " + expr + r" \ " + wrt 
     return expr, comp 
 
-
-
 def differentiation(expr:str, comp:str) -> tuple: 
     expr = r"\frac{d}{" + wrt + "}\ " + expr 
     comp = r"\equiv " + comp 
     return expr, comp 
-
-
 
 def commit(expr:str, rawexpr:str) -> None: 
     with open('save.txt', 'a') as save:  
@@ -211,21 +195,15 @@ def commit(expr:str, rawexpr:str) -> None:
         save.write('\n') 
     print(expr)  
 
-
-
 def access(x:int, file:str) -> str: 
     with open(file) as save: 
         lines = save.readlines() 
         outp = lines[-x].rstrip() 
     return outp 
 
-
-
 def increment(x:int) -> None: 
     global itera 
     itera += x 
-
-
 
 def pillow(path:str, scale:float) -> tuple: 
     w, h = Image.open(path).size 
@@ -234,15 +212,11 @@ def pillow(path:str, scale:float) -> tuple:
                                             
     return f(w, h)  
 
-
-
 def xfrange(start:int, stop:int, step:float) -> tuple: 
     i = 0  
     while start + i * step < stop: 
         yield start + i * step   
         i += 1 
-
-
 
 def trymap(x:float, e:str) -> eval or str: 
     if wrt != 'dx' and 'x' in e: e = '%' 
@@ -255,7 +229,6 @@ def trymap(x:float, e:str) -> eval or str:
         return eval(e) 
     except Exception: 
         return 'NaN' 
-
 
 @timeout(tt)  
 def formatinp(calculation:str, mode:str, ul:str, ll:str): 
@@ -276,11 +249,7 @@ def formatinp(calculation:str, mode:str, ul:str, ll:str):
             else differentiation(latex(parse(calculation)), latex(diff(parse(ref_calculation),
                                                                        Symbol(wrt.replace('d', '')))))
             
-            
-            
-
-
-
+                       
 def clear() -> None:
     try:
         files = os.listdir(".")
@@ -309,9 +278,7 @@ class MainScreen(Screen):
                 latexexpr, self.computeexpr = formatinp(calculation, mode, str(ul), str(ll))
                 render(latexexpr, self.cyndy, Error) 
                 commit(latexexpr, calculation + '¦' + str(ul) + '¦¦' + str(ll) + ';')
-                
-                
-
+                            
             except Exception as e: 
                 self.e = e 
                 print(e) 
@@ -348,9 +315,7 @@ class MainScreen(Screen):
                     render((r'\text{Timeout}\ '
                     if language == 'eng' else r'\text{Zeitfehler}\ ')
                     if 'timeout' in str(e.args) else (r'\text{Syntax Error}\ '
-                    if language == 'eng' else r'\text{Syntaktischer Fehler}\ '), self.cyndy, Error)
-                    
-                    
+                    if language == 'eng' else r'\text{Syntaktischer Fehler}\ '), self.cyndy, Error)                                     
         else: 
             Error = True 
             try: int(j) 
@@ -359,7 +324,6 @@ class MainScreen(Screen):
             
             render(r'\text{No Input}\ ' if language == 'eng' else r'\text{Keine Eingabe}\ ', self.cyndy, True)
             
-
         return self.cyndy 
 
     def displ(self) -> str:
@@ -382,8 +346,7 @@ class MainScreen(Screen):
                     render(self.computeexpr
                     if language == 'eng'
                     else self.computeexpr.replace('for', 'fuer').replace('otherwise', 'sonst'), self.helix, Error)
-                    
-                    
+                                      
             except Exception as q: 
                 if 'oversized' in str(q.args): 
                     render(r'\text{Image too large to render}\ '
@@ -483,8 +446,6 @@ class HistScreen(Screen):
         MainScreen.remaster(self, 0) 
         wrt = oldwrt 
 
-
-
 class GraphPopupClass(Popup): 
     def getsource(self) -> str:
         self.plotreturn.text = 'Geh zurueck' if language == 'ger' else 'Go back'
@@ -492,8 +453,7 @@ class GraphPopupClass(Popup):
         
         
         return plot() 
-                      
-
+                     
 
 class ClearPopupClass(Popup): 
     def init(self) -> None: 
@@ -506,8 +466,6 @@ class ClearPopupClass(Popup):
         self.yesbutton.text = 'Yes' if language == 'eng' else 'Ja' 
         self.nobutton.text = 'No' if language == 'eng' else 'Nein' 
         super().open() 
-
-
 
 class SettingsScreen(Screen): 
     def wrt(self, inp:str) -> None:  
@@ -553,14 +511,11 @@ class SettingsScreen(Screen):
             else ("Language", "English", "German", "Clear", "Clear history", "Global wrt variable, default: x",
                   "Axes extent, default: 20", "Timeout time(sec), default: 15", "return", "recompute", "recompute",
                   "recompute", "most recent", "load previous", "load more", "go back", "Settings", "Clear", "History",
-                  "Integrate", "Differentiate")
-        
-        
+                  "Integrate", "Differentiate")            
         
         language = 'eng' if lang == 'eng' else 'ger'
         
-
-
+        
 class DeactivatableButton(Button): 
     enabled = BooleanProperty(True) 
 
@@ -582,10 +537,8 @@ class CustButton(Button):
     pass 
 
 
-
 class Manager(ScreenManager): 
     pass 
-
 
 
 class CalculatorApp(App): 
