@@ -1,0 +1,503 @@
+# -------------- calculator.kv  -----------------
+#:import Clock kivy.clock.Clock
+
+<CustButton@Button>:
+    font_size: 25
+    size_hint_y: None
+    height: 50
+
+<DeactivatableButton@Button>:
+    font_size: 25
+    size_hint_y: None
+    height: 50
+
+<MainScreen>:
+    id: main
+    display: entry
+    inpexpr: inpexpr
+    outpexpr: outpexpr
+    differentiatebutton: differentiatebutton
+    integratebutton: integratebutton
+    histbutton: histbutton
+    clearbuttonmain: clearbuttonmain
+    deactivatablebutton: deactivatablebutton
+    settingsbutton: settingsbutton
+    AnchorLayout:
+        GridLayout:
+            rows: 4
+            row_default_height: 50
+            padding: 10
+            spacing: 10
+            anchor_y: 'top'
+            GridLayout:
+                rows: 1
+                size_hint_y: None
+                height: 50
+                cols: 2
+
+                GridLayout:
+                    cols: 1
+                    rows: 2
+                    size_hint_x: None
+                    minimum_width: 700
+                    TextInput:
+                        id: ulim
+                        size_hint_y: None
+                        height: 25
+                        font_size: 13
+                        multiline: False
+                    TextInput:
+                        id: llim
+                        size_hint_y: None
+                        height: 25
+                        font_size: 13
+                        multiline: False
+
+                TextInput:
+                    id: entry
+                    size_hint_y: None
+
+                    height: 50
+                    font_size: 32
+                    multiline: False
+
+
+            BoxLayout:
+                size_hint_y: None
+                height: 50
+                cols: 2
+                row_force_default: True
+                row_default_height: 40
+                spacing: 10
+
+                DeactivatableButton:
+                    id: differentiatebutton
+                    text: "Differentiate"
+                    #on_press: inpexpr.source = 'buffer.gif'
+                    #on_press: outpexpr.source = 'buffer.gif'
+                    on_press: outpexpr.opacity = 0
+                    on_press: inpexpr.opacity = 0
+                    on_press: differentiatebutton.enabled = False
+                    on_press: integratebutton.enabled = False
+                    on_press: inpexpr.source = root.calculate(entry.text, "diffr", llim.text, ulim.text)
+                    on_release: outpexpr.source = root.displ()
+                    on_release: Clock.schedule_once(root.remaster, 0.1)
+                    on_release: deactivatablebutton.enabled = True
+
+                DeactivatableButton:
+                    id: integratebutton
+                    text: "Integrate"
+                    #on_press: inpexpr.source = 'buffer.gif'
+                    #on_press: outpexpr.source = 'buffer.gif'
+                    on_press: outpexpr.opacity = 0
+                    on_press: inpexpr.opacity = 0
+                    on_press: differentiatebutton.enabled = False
+                    on_press: integratebutton.enabled = False
+                    on_press: inpexpr.source = root.calculate(entry.text, "itgr", llim.text, ulim.text)
+                    on_release: outpexpr.source = root.displ()
+                    on_release: Clock.schedule_once(root.remaster,0.1)
+                    on_release: deactivatablebutton.enabled = True
+
+            ScrollView:
+                GridLayout:
+                    cols: 1
+                    size_hint_x: None
+                    width: self.minimum_width
+                    Image:
+                        id: inpexpr
+                        opacity: 0
+                        size_hint_x: None
+                        size_hint_y: None
+                        #width: 120*(3/4)
+                        #height: 200
+
+            ScrollView:
+                GridLayout:
+                    cols: 1
+                    size_hint_x: None
+                    width: self.minimum_width
+                    Image:
+                        id: outpexpr
+                        opacity: 0
+                        size_hint_x: None
+                        size_hint_y: None
+                        #width: 3000
+                        #height: 200
+
+
+        BoxLayout:
+            cols: 4
+            row_force_default: True
+            row_default_height: 40
+            spacing: 10
+            anchor_y: 'bottom'
+
+            CustButton:
+                id: histbutton
+                text: 'History'
+                on_press: root.manager.current = 'histscr'
+                on_press: root.manager.transition.direction = 'right'
+
+            CustButton:
+                id: clearbuttonmain
+                text: "Clear"
+                on_press: entry.text = ""
+                on_press: inpexpr.opacity = 0
+                on_press: outpexpr.opacity = 0
+                on_release: deactivatablebutton.enabled = False
+
+            DeactivatableButton:
+                id: deactivatablebutton
+                text: "Graph"
+                enabled: False
+                on_press: root.graphpopupopen()
+
+
+            CustButton:
+                id: settingsbutton
+                text: 'Settings'
+                on_press: root.manager.current = 'settingscr'
+                on_press: root.manager.transition.direction = 'left'
+<HistScreen>:
+    one: one
+    two: two
+    three: three
+    back: back
+    more: more
+    prev: prev
+    mostrec: mostrec
+    recomputebutton: recomputebutton
+    recomputebutton1: recomputebutton1
+    recomputebutton2: recomputebutton2
+    id: history
+    AnchorLayout:
+        GridLayout:
+            rows: 4
+            padding: 10
+            spacing: 10
+            BoxLayout:
+                size_hint_y: None
+                height: 50
+                cols: 4
+                spacing: 1
+                anchor_y: 'top'
+                row_force_default: True
+                CustButton:
+                    id: back
+                    text: 'go back'
+                    on_press: root.manager.current = 'mainscr'
+                    on_press: root.manager.transition.direction = 'left'
+                    on_release: mostrec.enabled = True
+                    on_release: prev.enabled = False
+                    on_release: retrieval.opacity = 0
+                    on_release: retrieval1.opacity = 0
+                    on_release: retrieval2.opacity = 0
+
+                CustButton:
+                    id: more
+                    text: 'load more'
+                    on_press: app.incritera(3)
+                    on_release: one.source = root.retrieval(1)
+                    on_release: one.opacity = 1
+                    on_release: retrieval.opacity = 1
+                    on_release: two.source = root.retrieval(2)
+                    on_release: two.opacity = 1
+                    on_release: retrieval1.opacity = 1
+                    on_release: three.source = root.retrieval(3)
+                    on_release: three.opacity = 1
+                    on_release: retrieval2.opacity = 1
+                    on_release: prev.enabled = app.getenabled()
+                    on_release: mostrec.enabled = True
+
+                DeactivatableButton:
+                    id: prev
+                    enabled: False
+                    text: 'load previous'
+                    on_press: app.incritera(-3)
+                    on_release: one.source = root.retrieval(1)
+                    on_release: one.opacity = 1
+                    on_release: retrieval.opacity = 1
+                    on_release: two.source = root.retrieval(2)
+                    on_release: two.opacity = 1
+                    on_release: retrieval1.opacity = 1
+                    on_release: three.source = root.retrieval(3)
+                    on_release: three.opacity = 1
+                    on_release: retrieval2.opacity = 1
+                    on_release: prev.enabled = app.getenabled()
+                    on_release: mostrec.enabled = app.getenabled()
+
+                DeactivatableButton:
+                    id: mostrec
+                    enabled: True
+                    text: 'most recent'
+                    on_press: app.incritera(4)
+                    on_release: one.source = root.retrieval(1)
+                    on_release: one.opacity = 1
+                    on_release: retrieval.opacity = 1
+                    on_release: two.source = root.retrieval(2)
+                    on_release: two.opacity = 1
+                    on_release: retrieval1.opacity = 1
+                    on_release: three.source = root.retrieval(3)
+                    on_release: three.opacity = 1
+                    on_release: retrieval2.opacity = 1
+                    on_release: prev.enabled = False
+                    on_release: mostrec.enabled = False
+
+            GridLayout:
+                id: retrieval
+                opacity: 0
+                width: self.minimum_width
+                cols: 2
+                ScrollView:
+                    Image:
+                        id: one
+                        opacity: 0
+                        size_hint_x: None
+
+                CustButton:
+                    id: recomputebutton
+                    text: 'recompute'
+                    size_hint_x: None
+                    width: 130
+                    on_press: root.manager.current = 'mainscr'
+                    on_press: root.manager.transition.direction = 'left'
+                    on_press: root.recompute(1)
+                    on_release: mostrec.enabled = True
+                    on_release: prev.enabled = False
+                    on_release: retrieval.opacity = 0
+                    on_release: retrieval1.opacity = 0
+                    on_release: retrieval2.opacity = 0
+
+            GridLayout:
+                id: retrieval1
+                opacity: 0
+                width: self.minimum_width
+                cols: 2
+                ScrollView:
+                    Image:
+                        id: two
+                        opacity: 0
+                        size_hint_x: None
+
+                CustButton:
+                    id: recomputebutton1
+                    text: 'recompute'
+                    size_hint_x: None
+                    width: 130
+                    on_press: root.manager.current = 'mainscr'
+                    on_press: root.manager.transition.direction = 'left'
+                    on_press: root.recompute(2)
+                    on_release: mostrec.enabled = True
+                    on_release: prev.enabled = False
+                    on_release: retrieval.opacity = 0
+                    on_release: retrieval1.opacity = 0
+                    on_release: retrieval2.opacity = 0
+
+            GridLayout:
+                id: retrieval2
+                opacity: 0
+                width: self.minimum_width
+                cols: 2
+                ScrollView:
+                    Image:
+                        id: three
+                        opacity: 0
+                        size_hint_x: None
+
+                CustButton:
+                    id: recomputebutton2
+                    text: 'recompute'
+                    size_hint_x: None
+                    width: 130
+                    on_press: root.manager.current = 'mainscr'
+                    on_press: root.manager.transition.direction = 'left'
+                    on_press: root.recompute(3)
+                    on_release: mostrec.enabled = True
+                    on_release: prev.enabled = False
+                    on_release: retrieval.opacity = 0
+                    on_release: retrieval1.opacity = 0
+                    on_release: retrieval2.opacity = 0
+
+<SettingsScreen>:
+    id: setting
+    returnbutton: returnbutton
+    timeoutlabel: timeoutlabel
+    axeslabel: axeslabel
+    globlabel: globlabel
+    clearlabel: clearlabel
+    clearbutton: clearbutton
+    languagelabel: languagelabel
+    englishbutton: englishbutton
+    germanbutton: germanbutton
+    AnchorLayout
+        GridLayout:
+            rows: 3
+            padding: 10
+            spacing: 1
+            anchor_y: 'top'
+            GridLayout:
+                cols:2
+                rows:5
+                Label:
+                    id: timeoutlabel
+                    text: 'Timeout time(sec), default: 15'
+
+                TextInput:
+                    id: tt
+                    size_hint_y: None
+                    height: 50
+                    font_size: 32
+                    multiline: False
+                    text: '15'
+                    on_text_validate: root.tt(self.text)
+
+                Label:
+                    id: axeslabel
+                    text: 'Axes extent, default: 20'
+
+                TextInput:
+                    id: axesscope
+                    size_hint_y: None
+                    height: 50
+                    font_size: 32
+                    multiline: False
+                    text: '20'
+                    on_text_validate: root.axesscope(self.text)
+
+                Label:
+                    id: globlabel
+                    text: 'Global wrt variable, default: x'
+
+                TextInput:
+                    id: wrt
+                    size_hint_y: None
+                    height: 50
+                    font_size: 32
+                    multiline: False
+                    text: 'x'
+                    on_text_validate: root.wrt(self.text)
+
+                Label:
+                    id: clearlabel
+                    text: 'Clear history'
+
+                CustButton:
+                    id: clearbutton
+                    text: 'Clear'
+                    on_press: root.clearpopupopen()
+                Label:
+                    id: languagelabel
+                    text: 'Language'
+                BoxLayout:
+                    cols: 2
+                    CustButton:
+                        id: englishbutton
+                        text: 'English'
+                        on_press: root.changelanguage('eng')
+
+                    CustButton:
+                        id: germanbutton
+                        text: 'German'
+                        on_press: root.changelanguage('ger')
+
+            CustButton:
+                id: returnbutton
+                text: 'return'
+                on_press: root.manager.current = 'mainscr'
+                on_press: root.manager.transition.direction = 'right'
+
+
+<ClearPopupClass>:
+    id: clearpopup
+    clearpopup: clearpopup
+    content_text: content_text
+    yesbutton: yesbutton
+    nobutton: nobutton
+    title: 'Warning'
+    auto_dismiss: False
+    size_hint_y: None
+    size_hint_x: None
+    height: 250
+    width: 300
+
+
+    BoxLayout:
+        id: contentbox
+        orientation: "vertical"
+        rows: 2
+
+        ScrollView:
+            size_hint_y: None
+            height: 146
+            Label:
+                id: content_text
+                size_hint_y: None
+                height: self.texture_size[1]
+                text: 'Calculations are stored in plain text form, making the application easier to manage, clearing the history will not clear space, do you really want to clear?'
+                text_size: (self.width-20), None
+                line_height: 1.5
+                valign: "middle"
+
+        BoxLayout:
+            cols: 2
+            rows: 1
+            Button:
+                id: yesbutton
+                text: "Yes"
+                size_hint_y: None
+                height: "40dp"
+                on_press: app.clearhist()
+                on_release: root.dismiss()
+
+            Button:
+                id: nobutton
+                text: "No"
+                size_hint_y: None
+                height: "40dp"
+                on_press: root.dismiss()
+
+<GraphPopupClass>:
+    id: graphpopup
+    title: 'Plot'
+    graphpopup: graphpopup
+    plotreturn: plotreturn
+    auto_dismiss: False
+    size_hint_y: None
+    size_hint_x: None
+    height: 600
+    width: 525
+    GridLayout:
+        rows: 2
+
+        Image:
+            id: graphplot
+            source: root.getsource()
+
+        Button:
+            id: plotreturn
+            text: "Go back"
+            size_hint_y: None
+            height: "40dp"
+            on_press: root.dismiss()
+
+<Manager>:
+    id: screen_manager
+
+    main: main
+    history: history
+    setting: setting
+
+    MainScreen:
+        id: main
+        name: 'mainscr'
+        manager: screen_manager
+
+    HistScreen:
+        id: history
+        name: 'histscr'
+        manager: screen_manager
+
+    SettingsScreen:
+        id: setting
+        name: 'settingscr'
+        manager: screen_manager
