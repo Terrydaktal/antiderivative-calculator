@@ -38,10 +38,10 @@ yesbutton, nobutton = (ObjectProperty(None),) * 35
 
 
 def render(expr:str, path:str, err:bool) -> None:
-    rcParams['text.usetex'] = True if 'begin' in expr or err is True else False
-    rcParams['text.latex.unicode'] = True if 'begin' in expr or err is True else False
+    rcParams['text.usetex'] = 'begin' in expr or err
+    rcParams['text.latex.unicode'] = 'begin' in expr or err
     rcParams['text.latex.preamble'] = r'\usepackage{amsmath}' \
-        if 'begin' in expr or err is True else r'\usepackage{unicode-math}'
+        if 'begin' in expr or err else r'\usepackage{unicode-math}'
     
     fig = plt.figure() 
     ax = plt.axes([0, 0, 1, 1]) 
@@ -302,9 +302,9 @@ class MainScreen(Screen):
                     render(r'\text{Fatal Error}\ '
                     if language == 'eng'
                     else r'\text{Unbehebbarer Fehler}\ ', self.cyndy, Error)
-                    
 
-                else: 
+
+               else: 
                     render((r'\text{Timeout}\ '
                     if language == 'eng' else r'\text{Zeitfehler}\ ')
                     if 'timeout' in str(e.args) else (r'\text{Syntax Error}\ '
@@ -424,7 +424,7 @@ class HistScreen(Screen):
         ll = '' if '\int_{' not in line or '{}^{}' in line \
             else rawline[rawline.find("¦¦") + 2:rawline.find(";")]
         
-        
+
         
         print(rawcalc, ul, ll) 
                                
