@@ -36,7 +36,6 @@ recomputebutton2, mostrec, prev, more, back, settingsbutton, histbutton, clearbu
 integratebutton, differentiatebutton, graphpopup, plotreturn, clearpopup, content_text, \
 yesbutton, nobutton = (ObjectProperty(None),) * 35 
 
-
 def render(expr:str, path:str, err:bool) -> None:
     rcParams['text.usetex'] = 'begin' in expr or err
     rcParams['text.latex.unicode'] = 'begin' in expr or err
@@ -146,12 +145,10 @@ def parse(i:str) -> str:
     parsed = parse_expr(i, transformations=(
         standard_transformations + (convert_xor, implicit_multiplication_application,)))
     
-
     return parsed 
 
 def generatepath() -> str:
-    randpath = ''.join(random.sample(ascii_letters * 6, 6)) + '.png' 
-                                                              
+    randpath = ''.join(random.sample(ascii_letters * 6, 6)) + '.png'                                                           
     return randpath 
 
 def integration(expr:str, comp:object, ul:str, ll:str) -> tuple: 
@@ -303,7 +300,6 @@ class MainScreen(Screen):
                     if language == 'eng'
                     else r'\text{Unbehebbarer Fehler}\ ', self.cyndy, Error)
 
-
                else: 
                     render((r'\text{Timeout}\ '
                     if language == 'eng' else r'\text{Zeitfehler}\ ')
@@ -312,8 +308,7 @@ class MainScreen(Screen):
         else: 
             Error = True 
             try: int(j) 
-            except TypeError as ve: self.e = ve 
-            
+            except TypeError as ve: self.e = ve     
             
             render(r'\text{No Input}\ ' if language == 'eng' else r'\text{Keine Eingabe}\ ', self.cyndy, True)
             
@@ -348,8 +343,7 @@ class MainScreen(Screen):
                     
                 else:
                     render(r'\text{Nothing to show}\ ' 
-                                                       
-                                                       
+                                                                                                     
                     if language == 'eng'
                     else r'\text{Nichts anzuzeigen}\ ', self.helix, True)
 
@@ -392,8 +386,7 @@ class HistScreen(Screen):
             
             except Exception: render(r'\text{no further item}\ '
                               if language == 'eng'
-                              else r'\text{Nichts weiteres}\ ', path, True)
-            
+                              else r'\text{Nichts weiteres}\ ', path, True)            
             
             if n == 1: 
                 print('one') 
@@ -418,14 +411,10 @@ class HistScreen(Screen):
         line = access(itera + n, 'save.txt') 
         ul = '' if '\int_{' not in line or '{}^{}' in line \
             else rawline[rawline.find("¦") + 1:rawline.find("¦¦")]
-        
-        
-        
+      
         ll = '' if '\int_{' not in line or '{}^{}' in line \
             else rawline[rawline.find("¦¦") + 2:rawline.find(";")]
-        
-
-        
+       
         print(rawcalc, ul, ll) 
                                
         oldwrt = wrt 
@@ -443,8 +432,7 @@ class GraphPopupClass(Popup):
     def getsource(self) -> str:
         self.plotreturn.text = 'Geh zurueck' if language == 'ger' else 'Go back'
         self.graphpopup.title = 'Diagramm' if language == 'ger' else 'Plot'
-        
-        
+      
         return plot() 
                      
 
