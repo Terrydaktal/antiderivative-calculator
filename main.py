@@ -20,10 +20,8 @@ from sympy.parsing.sympy_parser import parse_expr, standard_transformations, \
     implicit_multiplication_application, convert_xor 
 from sympy_abs_sign_addon import adjust 
 
-
 set(style='ticks') 
 require('1.9.1') 
-
 
 itera = 0 
 Error = False 
@@ -31,7 +29,6 @@ wrt = 'dx'
 tt = 15 
 axesscope = 20 
 language = 'eng' 
-
 
 outpexpr, inpexpr, main, history, setting, one, two, three, languagelabel, \
 englishbutton, germanbutton, clearbutton, clearlabel, globlabel, \
@@ -74,7 +71,6 @@ def render(expr:str, path:str, err:bool) -> None:
         raise Exception('oversized')
 
     clear()
-
 
 def plot() -> str:
     global axesscope 
