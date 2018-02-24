@@ -16,8 +16,7 @@ from kivy.properties import BooleanProperty, ObjectProperty
 from matplotlib import rcParams 
 from sympy import * 
 from sympy.abc import * 
-from sympy.parsing.sympy_parser import parse_expr, standard_transformations, \
-    implicit_multiplication_application, convert_xor 
+from sympy.parsing.sympy_parser import parse_expr, standard_transformations, implicit_multiplication_application, convert_xor 
 from sympy_abs_sign_addon import adjust 
 
 set(style='ticks') 
