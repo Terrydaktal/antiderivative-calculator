@@ -216,8 +216,7 @@ def xfrange(start:int, stop:int, step:float) -> tuple:
 
 def trymap(x:float, e:str) -> eval or str: 
     if wrt != 'dx' and 'x' in e: e = '%' 
-                                         
-                                         
+                                                                          
     e = e.replace(wrt.replace('d', ''), 'x') 
     f = lambda x: eval(e)   
     try:
@@ -240,10 +239,10 @@ def formatinp(calculation:str, mode:str, ul:str, ll:str):
         if ul != '' or ll != '': 
             raise Exception('onelimit') 
         return integration(latex(parse(calculation)), latex(integrate(parse(ref_calculation),
-                                                                      Symbol(wrt.replace('d', '')))), ul, ll) \
+            Symbol(wrt.replace('d', '')))), ul, ll) \
             if mode == 'itgr' \
             else differentiation(latex(parse(calculation)), latex(diff(parse(ref_calculation),
-                                                                       Symbol(wrt.replace('d', '')))))
+            Symbol(wrt.replace('d', '')))))
             
                        
 def clear() -> None:
@@ -253,11 +252,10 @@ def clear() -> None:
         for f in files: 
             if os.path.isfile(f): 
                 t = os.stat(f) 
-
+                      
                 if t.st_ctime < time() - 20 and f.endswith('.png'): 
-                    
-                    os.remove(f) 
-
+                      os.remove(f) 
+                      
     except Exception: 
         pass
 
@@ -468,7 +466,6 @@ class SettingsScreen(Screen):
         global wrt  
         if inp: 
             if inp in ascii_letters and len(inp) == 1: 
-                                                       
                 wrt = "d" + inp 
             else: pass 
     def tt(self, inp:int) -> None: 
